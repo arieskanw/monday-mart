@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monday Mart - Digital Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --bg-secondary: #0a0a0a;
+            --border: #222;
+            --text: #fff;
+            --text-secondary: #888;
+            --success: #22c55e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .logo { font-size: 20px; font-weight: 700; }
+        .logo span { color: var(--text-secondary); }
+        .header-right { display: flex; align-items: center; gap: 24px; }
+        .lang-switch { display: flex; gap: 8px; }
+        .lang-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--text);
+            color: var(--bg);
+        }
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: var(--text); }
+        
+        /* Hero */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: clamp(32px, 8vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+        
+        /* Products */
+        .products { padding: 60px 0; }
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .product-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            border-color: #333;
+            transform: translateY(-4px);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--success);
+            color: #000;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+        .badge.coming { background: #444; }
+        .product-icon { font-size: 36px; margin-bottom: 16px; }
+        .product-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .product-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .price-current {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .price-original {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+        .product-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--text);
+            color: var(--bg);
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: opacity 0.2s;
+        }
+        .product-btn:hover { opacity: 0.9; }
+        
+        /* Features */
+        .features {
+            padding: 60px 0;
+            background: var(--bg-secondary);
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            text-align: center;
+        }
+        .feature-item h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        /* Payment */
+        .payment { padding: 60px 0; text-align: center; }
+        .payment-title { font-size: 20px; margin-bottom: 20px; }
+        .payment-icons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .payment-icon {
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        footer p { color: var(--text-secondary); font-size: 14px; }
+        footer a { color: var(--text); }
+        
+        /* Language */
+        [lang="id"] .en { display: none; }
+        [lang="en"] .id { display: none; }
+        
+        /* Mobile Nav */
+        .mobile-nav { display: none; }
+        
+        @media (max-width: 640px) {
+            .nav { display: none; }
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.95);
+                border-top: 1px solid var(--border);
+                padding: 12px 16px;
+                justify-content: space-around;
+                z-index: 100;
+            }
+            .mobile-nav a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-size: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            .hero { padding: 120px 0 60px; }
+            .product-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">Monday<span>Mart</span></div>
+            <div class="header-right">
+                <div class="lang-switch">
+                    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+                    <button class="lang-btn" onclick="setLang('id')">ID</button>
+                </div>
+                <nav class="nav">
+                    <a href="#products">
+                        <span class="en">Products</span>
+                        <span class="id">Produk</span>
+                    </a>
+                    <a href="#payment">
+                        <span class="en">Payment</span>
+                        <span class="id">Pembayaran</span>
+                    </a>
+                    <a href="#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>
+                <span class="en">Premium Digital Products</span>
+                <span class="id">Produk Digital Premium</span>
+            </h1>
+            <p>
+                <span class="en">High-quality AI tools, prompts & automation solutions.</span>
+                <span class="id">Alat AI berkualitas tinggi & solusi otomatisasi.</span>
+            </p>
+        </div>
+    </section>
+    
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="en">Our Products</span>
+                <span class="id">Produk Kami</span>
+            </h2>
+            
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <span class="badge">BEST SELLER</span>
+                    <div class="product-icon">🤖</div>
+                    <h3>AI Prompt Collection</h3>
+                    <p class="en">50+ premium prompts for ChatGPT & Claude. EN & ID versions included!</p>
+                    <p class="id">50+ prompts premium untuk ChatGPT & Claude. Versi EN & ID included!</p>
+                    <div class="product-price">
+                        <span class="price-current">$9</span>
+                        <span class="price-original">$39</span>
+                    </div>
+                    <a href="order.html?product=prompts" class="product-btn">
+                        <span class="en">Order Now</span>
+                        <span class="id">Pesan Sekarang</span>
+                    </a>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-icon">🐍</div>
+                    <h3>Trading Bot Script</h3>
+                    <p class="en">Automated crypto bot with DeepSeek AI.</p>
+                    <p class="id">Bot crypto otomatis dengan DeepSeek AI.</p>
+                    <div class="product-price">
+                        <span class="price-current">$29</span>
+                        <span class="price-original">$79</span>
+                    </div>
+                    <a href="order.html?product=bot" class="product-btn">
+                        <span class="en">Order Now</span>
+                        <span class="id">Pesan Sekarang</span>
+                    </a>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <span class="badge coming">COMING SOON</span>
+                    <div class="product-icon">📊</div>
+                    <h3>Automation Templates</h3>
+                    <p class="en">Pre-built automation scripts.</p>
+                    <p class="id">Script otomatisasi siap pakai.</p>
+                    <div class="product-price">
+                        <span class="price-current">$15</span>
+                        <span class="price-original">$39</span>
+                    </div>
+                    <a href="#contact" class="product-btn">
+                        <span class="en">Notify Me</span>
+                        <span class="id">Beritahu Saya</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="en">Why Choose Us?</span>
+                <span class="id">Mengapa Memilih Kami?</span>
+            </h2>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>⚡ Instant Delivery</h3>
+                    <p class="en">Get product immediately</p>
+                    <p class="id">Langsung dapat produk</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔄 Free Updates</h3>
+                    <p class="en">All products include updates</p>
+                    <p class="id">Termasuk update gratis</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💬 Support</h3>
+                    <p class="en">Direct chat for help</p>
+                    <p class="id">Chat langsung untuk bantuan</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔒 Secure Payment</h3>
+                    <p class="en">Stripe & Midtrans</p>
+                    <p class="id">Stripe & Midtrans</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="payment" class="payment">
+        <div class="container">
+            <h2 class="payment-title">
+                <span class="en">Payment Methods</span>
+                <span class="id">Metode Pembayaran</span>
+            </h2>
+            
+            <div class="payment-icons">
+                <span class="payment-icon">💳 Stripe</span>
+                <span class="payment-icon">💎 QRIS</span>
+                <span class="payment-icon">📱 GoPay</span>
+                <span class="payment-icon">🏦 Transfer</span>
+            </div>
+        </div>
+    </section>
+    
+    <footer id="contact">
+        <div class="container">
+            <p class="en">Questions? Chat with us:</p>
+            <p class="id">Pertanyaan? Chat dengan kami:</p>
+            <p style="margin-top: 12px;">
+                <a href="https://t.me/monday_ai">@monday_ai</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+        <a href="#products">
+            <span>📦</span>
+            <span class="en">Products</span>
+            <span class="id">Produk</span>
+        </a>
+        <a href="#payment">
+            <span>💳</span>
+            <span class="en">Pay</span>
+            <span class="id">Bayar</span>
+        </a>
+        <a href="#contact">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+    </nav>
+    
+    <script>
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+            });
+        }
+    </script>
+</body>
+</html>
