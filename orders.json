@@ -1,0 +1,37 @@
+{
+  "orders": [
+    {
+      "id": "1708891200",
+      "date": "2026-02-25 18:00",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "telegram": "@johndoe",
+      "product": "prompts",
+      "amount": "$9",
+      "payment": "stripe",
+      "status": "paid"
+    },
+    {
+      "id": "1708891300",
+      "date": "2026-02-25 18:15",
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "telegram": "@janesmith",
+      "product": "bot",
+      "amount": "$29",
+      "payment": "stripe",
+      "status": "paid"
+    },
+    {
+      "id": "1708891400",
+      "date": "2026-02-25 18:30",
+      "name": "Budi Santoso",
+      "email": "budi@gmail.com",
+      "telegram": "@budi_s",
+      "product": "prompts",
+      "amount": "Rp 145.000",
+      "payment": "midtrans",
+      "status": "pending"
+    }
+  ]
+}
