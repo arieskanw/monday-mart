@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monday Mart - Crypto Payment</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .header .logo {
+            color: #22c55e;
+        }
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .product-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .product-price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .price-note {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .crypto-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: #0a0a0a;
+            border: 2px solid #222;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .crypto-option:hover {
+            border-color: #22c55e;
+        }
+        .crypto-option.selected {
+            border-color: #22c55e;
+            background: #0d1a0d;
+        }
+        .crypto-icon {
+            font-size: 32px;
+        }
+        .crypto-info {
+            flex: 1;
+        }
+        .crypto-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .crypto-network {
+            font-size: 13px;
+            color: #666;
+        }
+        .wallet-section {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .wallet-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .wallet-address {
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            background: #111;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .copy-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #22c55e;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .copy-btn:active {
+            background: #16a34a;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+        }
+        .instructions {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #22c55e;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #22c55e;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .success-msg {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: #0d1a0d;
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+        }
+        .success-msg.show {
+            display: block;
+        }
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .success-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #22c55e;
+        }
+        .success-text {
+            color: #888;
+            font-size: 14px;
+        }
+        .lang-switch {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .lang-btn {
+            padding: 8px 16px;
+            background: #222;
+            color: #888;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .lang-btn.active {
+            background: #22c55e;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="logo">Monday</span> Mart</h1>
+        </div>
+        
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('id')">ID</button>
+        </div>
+        
+        <!-- Product Selection -->
+        <div class="card">
+            <div class="product-info">
+                <div class="product-name" id="productName">AI Prompt Collection</div>
+                <div class="product-price" id="productPrice">$9 USD</div>
+                <div class="price-note" id="priceNote">≈ Rp 135.000 (depends on crypto price)</div>
+            </div>
+        </div>
+        
+        <!-- Crypto Selection -->
+        <div class="card">
+            <div style="color:#888;font-size:14px;margin-bottom:15px;">Select Cryptocurrency:</div>
+            
+            <div class="crypto-option selected" onclick="selectCrypto('USDT')">
+                <div class="crypto-icon">₮</div>
+                <div class="crypto-info">
+                    <div class="crypto-name">USDT (Tether)</div>
+                    <div class="crypto-network">TRC20 Network</div>
+                </div>
+            </div>
+            
+            <div class="crypto-option" onclick="selectCrypto('BTC')">
+                <div class="crypto-icon">₿</div>
+                <div class="crypto-info">
+                    <div class="crypto-name">Bitcoin</div>
+                    <div class="crypto-network">Bitcoin Network</div>
+                </div>
+            </div>
+            
+            <div class="crypto-option" onclick="selectCrypto('ETH')">
+                <div class="crypto-icon">Ξ</div>
+                <div class="crypto-info">
+                    <div class="crypto-name">Ethereum</div>
+                    <div class="crypto-network">ERC20 Network</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wallet Address -->
+        <div class="card" id="walletCard">
+            <div class="wallet-label" id="sendToLabel">Send payment to this address:</div>
+            
+            <div class="wallet-address" id="walletAddress">TFKxG... (loading)</div>
+            
+            <div class="qr-code" id="qrCode">
+                <!-- QR Code will be generated -->
+            </div>
+            
+            <button class="copy-btn" onclick="copyAddress()" id="copyBtn">📋 Copy Address</button>
+            
+            <ol class="instructions" id="instructions">
+                <li>Send exactly <strong id="sendAmount">$9 USDT</strong> to the address above</li>
+                <li>Wait for 1-3 confirmations on the network</li>
+                <li>Fill in your details below and submit</li>
+                <li>We'll send the product within 24 hours</li>
+            </ol>
+        </div>
+        
+        <!-- Confirmation Form -->
+        <div class="card">
+            <div style="color:#888;font-size:14px;margin-bottom:15px;" id="confirmLabel">Confirm Payment:</div>
+            
+            <form id="paymentForm" onsubmit="submitPayment(event)">
+                <div class="form-group">
+                    <label id="nameLabel">Your Name</label>
+                    <input type="text" id="customerName" required placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label id="emailLabel">Email</label>
+                    <input type="email" id="customerEmail" required placeholder="john@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label id="telegramLabel">Telegram (optional)</label>
+                    <input type="text" id="customerTelegram" placeholder="@username">
+                </div>
+                
+                <div class="form-group">
+                    <label id="txHashLabel">Transaction Hash (TXID)</label>
+                    <input type="text" id="txHash" required placeholder="e.g., abc123...xyz">
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">✅ Confirm Payment</button>
+            </form>
+        </div>
+        
+        <!-- Success Message -->
+        <div class="success-msg" id="successMsg">
+            <div class="success-icon">🎉</div>
+            <div class="success-title" id="successTitle">Payment Submitted!</div>
+            <div class="success-text" id="successText">We'll verify and send your product within 24 hours. Check your email!</div>
+        </div>
+        
+        <div style="text-align:center;margin-top:30px;color:#444;font-size:14px;">
+            <a href="index.html" style="color:#666;text-decoration:none;">← Back to Home</a>
+        </div>
+    </div>
+    
+    <script>
+        // Wallet addresses (replace with your actual wallets)
+        const wallets = {
+            USDT: {
+                address: 'TFKxG7vZLKxG7vZLKxG7vZLKxG7vZLKxG7', // TRC20 USDT - REPLACE THIS
+                network: 'TRC20'
+            },
+            BTC: {
+                address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', // Bitcoin - REPLACE THIS
+                network: 'Bitcoin'
+            },
+            ETH: {
+                address: '0x742d35Cc6634C0532925a3b844Bc9e7595f0fEb1', // ERC20 - REPLACE THIS
+                network: 'ERC20'
+            }
+        };
+        
+        let selectedCrypto = 'USDT';
+        let currentLang = 'en';
+        
+        // Get product from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('product') || 'prompts';
+        
+        const products = {
+            prompts: {
+                nameEN: 'AI Prompt Collection',
+                nameID: 'Koleksi AI Prompt',
+                price: 9
+            },
+            bot: {
+                nameEN: 'Trading Bot Script',
+                nameID: 'Script Bot Trading',
+                price: 29
+            }
+        };
+        
+        function init() {
+            const product = products[productId];
+            document.getElementById('productName').textContent = currentLang === 'en' ? product.nameEN : product.nameID;
+            document.getElementById('productPrice').textContent = '$' + product.price + ' USD';
+            document.getElementById('sendAmount').textContent = '$' + product.price + ' USDT';
+            
+            updateWalletDisplay();
+        }
+        
+        function selectCrypto(crypto) {
+            selectedCrypto = crypto;
+            document.querySelectorAll('.crypto-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            updateWalletDisplay();
+        }
+        
+        function updateWalletDisplay() {
+            const wallet = wallets[selectedCrypto];
+            document.getElementById('walletAddress').textContent = wallet.address;
+            
+            // Generate QR code
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(wallet.address)}`;
+            document.getElementById('qrCode').innerHTML = `<img src="${qrUrl}" alt="QR Code">`;
+        }
+        
+        function copyAddress() {
+            const address = wallets[selectedCrypto].address;
+            navigator.clipboard.writeText(address).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Address';
+                }, 2000);
+            });
+        }
+        
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (lang === 'en') {
+                document.getElementById('productName').textContent = products[productId].nameEN;
+                document.getElementById('priceNote').textContent = '≈ Rp ' + (products[productId].price * 15000).toLocaleString('id-ID') + ' (depends on crypto price)';
+                document.getElementById('sendToLabel').textContent = 'Send payment to this address:';
+                document.getElementById('confirmLabel').textContent = 'Confirm Payment:';
+                document.getElementById('nameLabel').textContent = 'Your Name';
+                document.getElementById('emailLabel').textContent = 'Email';
+                document.getElementById('telegramLabel').textContent = 'Telegram (optional)';
+                document.getElementById('txHashLabel').textContent = 'Transaction Hash (TXID)';
+                document.getElementById('submitBtn').textContent = '✅ Confirm Payment';
+                document.getElementById('successTitle').textContent = 'Payment Submitted!';
+                document.getElementById('successText').textContent = "We'll verify and send your product within 24 hours. Check your email!";
+            } else {
+                document.getElementById('productName').textContent = products[productId].nameID;
+                document.getElementById('priceNote').textContent = '≈ Rp ' + (products[productId].price * 15000).toLocaleString('id-ID') + ' (tergantung harga crypto)';
+                document.getElementById('sendToLabel').textContent = 'Kirim pembayaran ke alamat ini:';
+                document.getElementById('confirmLabel').textContent = 'Konfirmasi Pembayaran:';
+                document.getElementById('nameLabel').textContent = 'Nama Lengkap';
+                document.getElementById('emailLabel').textContent = 'Email';
+                document.getElementById('telegramLabel').textContent = 'Telegram (opsional)';
+                document.getElementById('txHashLabel').textContent = 'Transaction Hash (TXID)';
+                document.getElementById('submitBtn').textContent = '✅ Konfirmasi Pembayaran';
+                document.getElementById('successTitle').textContent = 'Pembayaran Diterima!';
+                document.getElementById('successText').textContent = 'Kami akan kirim produk dalam 24 jam. Cek email kamu!';
+            }
+            
+            // Update instructions
+            const product = products[productId];
+            document.getElementById('sendAmount').textContent = '$' + product.price + ' USDT';
+        }
+        
+        function submitPayment(e) {
+            e.preventDefault();
+            
+            const data = {
+                product: productId,
+                crypto: selectedCrypto,
+                name: document.getElementById('customerName').value,
+                email: document.getElementById('customerEmail').value,
+                telegram: document.getElementById('customerTelegram').value,
+                txHash: document.getElementById('txHash').value,
+                date: new Date().toISOString()
+            };
+            
+            // Save to localStorage (in real app, send to server)
+            const orders = JSON.parse(localStorage.getItem('cryptoOrders') || '[]');
+            orders.push(data);
+            localStorage.setItem('cryptoOrders', JSON.stringify(orders));
+            
+            // Show success
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('walletCard').style.display = 'none';
+            document.getElementById('successMsg').classList.add('show');
+            
+            // Notify via Telegram (in real app, this would be a server webhook)
+            console.log('New order:', data);
+        }
+        
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
