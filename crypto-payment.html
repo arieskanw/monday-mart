@@ -246,7 +246,15 @@
                 <div class="crypto-icon">₮</div>
                 <div class="crypto-info">
                     <div class="crypto-name">USDT (Tether)</div>
-                    <div class="crypto-network">TRC20 Network</div>
+                    <div class="crypto-network">TRC20 / BEP20</div>
+                </div>
+            </div>
+            
+            <div class="crypto-option" onclick="selectCrypto('BNB')">
+                <div class="crypto-icon">⬡</div>
+                <div class="crypto-info">
+                    <div class="crypto-name">BNB</div>
+                    <div class="crypto-network">BEP20 (Cheapest!)</div>
                 </div>
             </div>
             
@@ -271,7 +279,19 @@
         <div class="card" id="walletCard">
             <div class="wallet-label" id="sendToLabel">Send payment to this address:</div>
             
-            <div class="wallet-address" id="walletAddress">TFKxG... (loading)</div>
+            <!-- Network Selector -->
+            <div style="margin-bottom: 15px;">
+                <div style="color:#666;font-size:13px;margin-bottom:10px;">Select Network:</div>
+                <div id="networkSelector" style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <!-- Network options will be dynamically generated -->
+                </div>
+            </div>
+            
+            <div class="wallet-address" id="walletAddress">Loading...</div>
+            
+            <div style="text-align:center;margin-bottom:10px;">
+                <span id="networkLabel" style="display:inline-block;padding:4px 12px;background:#222;border-radius:20px;font-size:12px;color:#888;">TRC20</span>
+            </div>
             
             <div class="qr-code" id="qrCode">
                 <!-- QR Code will be generated -->
@@ -332,20 +352,22 @@
         // Wallet addresses (replace with your actual wallets)
         const wallets = {
             USDT: {
-                address: 'TFKxG7vZLKxG7vZLKxG7vZLKxG7vZLKxG7', // TRC20 USDT - REPLACE THIS
-                network: 'TRC20'
+                TRC20: 'TFKxG...', // TRC20 USDT - REPLACE THIS
+                BEP20: '0x...',    // BEP20 USDT - REPLACE THIS
+            },
+            BNB: {
+                BEP20: '0x...',    // BNB Smart Chain - REPLACE THIS
             },
             BTC: {
-                address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', // Bitcoin - REPLACE THIS
-                network: 'Bitcoin'
+                BTC: 'bc1q...',    // Bitcoin - REPLACE THIS
             },
             ETH: {
-                address: '0x742d35Cc6634C0532925a3b844Bc9e7595f0fEb1', // ERC20 - REPLACE THIS
-                network: 'ERC20'
+                ERC20: '0x...',   // ERC20 ETH - REPLACE THIS
             }
         };
         
         let selectedCrypto = 'USDT';
+        let selectedNetwork = 'TRC20';
         let currentLang = 'en';
         
         // Get product from URL
@@ -371,27 +393,58 @@
             document.getElementById('productPrice').textContent = '$' + product.price + ' USD';
             document.getElementById('sendAmount').textContent = '$' + product.price + ' USDT';
             
-            updateWalletDisplay();
+            // Initialize network selector for USDT
+            selectCrypto('USDT');
+            document.querySelectorAll('.crypto-option')[0].classList.add('selected');
         }
         
         function selectCrypto(crypto) {
             selectedCrypto = crypto;
             document.querySelectorAll('.crypto-option').forEach(el => el.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
+            
+            // Generate network selector
+            const wallet = wallets[crypto];
+            const networks = Object.keys(wallet);
+            selectedNetwork = networks[0];
+            
+            let networkHTML = '';
+            networks.forEach((network, index) => {
+                let label = network;
+                if (network === 'BEP20') label += ' (Cheap!)';
+                if (network === 'TRC20') label += ' (Fast)';
+                networkHTML += `<button class="network-option ${index === 0 ? 'selected' : ''}" 
+                    style="padding:8px 16px;background:${index === 0 ? '#22c55e' : '#222'};color:${index === 0 ? '#000' : '#888'};border:none;border-radius:6px;cursor:pointer;font-size:13px;"
+                    onclick="selectNetwork('${network}')">${label}</button>`;
+            });
+            document.getElementById('networkSelector').innerHTML = networkHTML;
+            
             updateWalletDisplay();
         }
         
         function updateWalletDisplay() {
             const wallet = wallets[selectedCrypto];
-            document.getElementById('walletAddress').textContent = wallet.address;
+            const address = wallet[selectedNetwork] || wallet[Object.keys(wallet)[0]];
+            document.getElementById('walletAddress').textContent = address;
             
             // Generate QR code
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(wallet.address)}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(address)}`;
             document.getElementById('qrCode').innerHTML = `<img src="${qrUrl}" alt="QR Code">`;
+            
+            // Update network label
+            document.getElementById('networkLabel').textContent = selectedNetwork + ' Network';
+        }
+        
+        function selectNetwork(network) {
+            selectedNetwork = network;
+            document.querySelectorAll('.network-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            updateWalletDisplay();
         }
         
         function copyAddress() {
-            const address = wallets[selectedCrypto].address;
+            const wallet = wallets[selectedCrypto];
+            const address = wallet[selectedNetwork] || wallet[Object.keys(wallet)[0]];
             navigator.clipboard.writeText(address).then(() => {
                 const btn = document.getElementById('copyBtn');
                 btn.textContent = '✅ Copied!';
@@ -443,6 +496,7 @@
             const data = {
                 product: productId,
                 crypto: selectedCrypto,
+                network: selectedNetwork,
                 name: document.getElementById('customerName').value,
                 email: document.getElementById('customerEmail').value,
                 telegram: document.getElementById('customerTelegram').value,
